@@ -9,8 +9,12 @@ class Rectangle {
         this.column = props.column;
         this.row = props.row;
         this.clicked = props.clicked;
+        this.mouseOver = props.mouseOver;
+        this.mouseOut = props.mouseOut;
+        this.isPermanent = false;
+        this.isTemporary = false;
         this.create(props);
-        this.attachListeners();
+        this.attachSelectedListener();
     }
 
     create(props) {
@@ -33,13 +37,60 @@ class Rectangle {
         });
     }
 
-    attachListeners() {
-        this.rect.on('selected', () => this.clicked(this));
-    }
-
     get() {
         return this.rect;
     }
+
+    attachSelectedListener() {
+        this.rect.on('selected', () => this.clicked(this));
+    }
+
+    deattachSelectedListener() {
+        this.rect.off('selected', () => this.clicked(this));
+    }
+
+    attachMouseOverListener() {
+        this.rect.on('mouseover', () => this.mouseOver(this));
+    }
+
+    deatachMouseOverListener() {
+        this.rect.off('mouseover', () => this.mouseOver(this));
+    }
+
+    attachMouseOutListener() {
+        this.rect.on('mouseout', () => this.mouseOut(this));
+    }
+
+    deatachMouseOutListener() {
+        this.rect.off('mouseout', () => this.mouseOut(this));
+    }
+
+    setIsPermanent(isPermanent) {
+        this.isPermanent = isPermanent;
+        this.rect.set('fill', Rectangle.COLORS.PERMANENT);
+        this.deattachSelectedListener();
+    }
+
+    setIsTemporary(isTemporary) {
+        this.isTemporary = isTemporary;
+        this.rect.set('fill', Rectangle.COLORS.TEMPORARY);
+        if (isTemporary) {
+            this.attachMouseOverListener();
+            this.attachMouseOutListener();
+
+        }
+        else {
+            this.deattachMouseOverListener();
+            this.deatachMouseOutListener();
+        }
+
+    }
+}
+
+Rectangle.COLORS = {
+    PERMANENT: 'rgb(144, 140, 255)',
+    TEMPORARY: 'rgb(195, 186, 255)',
+    HOVER: 'rgb(195, 186, 0)'
 }
 
 export default Rectangle;
