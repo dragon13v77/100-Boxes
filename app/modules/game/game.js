@@ -63,6 +63,7 @@ class Game {
     }
 
     rectangleClickedHandler = (rect) =>  {
+    console.log('RECTANGLE CLICK HANDLER ' + rect.rect.id);
         if (rect.isTemporary) {
             this.resetTemporaryRectangles();
             this.setPermanentRectangle(rect);
@@ -119,6 +120,9 @@ class Game {
     checkScore() {
         if (this.state.temporary.length === 0) {
             alert('Mjau mrnjau :(');
+        }
+        if (this.state.permanent === this.width * this.height) {
+            alert('Mjau mrnjau :)');
         }
     }
 }

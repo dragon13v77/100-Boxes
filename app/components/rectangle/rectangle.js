@@ -35,7 +35,8 @@ class Rectangle {
             lockMovementY: true,
             selection : false,
             hasBorders: false,
-            hasControls: false
+            hasControls: false,
+            hoverCursor: 'default'
         });
     }
 
@@ -48,7 +49,8 @@ class Rectangle {
     }
 
     deattachSelectedListener() {
-        this.rect.off('selected', () => this.clicked(this));
+        //this.rect.off('selected', () => this.clicked(this));
+        this.rect.__eventListeners['selected'] = [];
     }
 
     attachMouseOverListener() {
@@ -56,7 +58,7 @@ class Rectangle {
     }
 
     deatachMouseOverListener() {
-        // not working need to check why
+        // todo: not working need to check why
         //this.rect.off('mouseover', () => this.mouseOver(this));
         this.rect.__eventListeners['mouseover'] = [];
     }
@@ -66,38 +68,82 @@ class Rectangle {
     }
 
     deatachMouseOutListener() {
-        // not working need to check why
+        // todo: not working need to check why
         //this.rect.off('mouseout', () => this.mouseOut(this));
         this.rect.__eventListeners['mouseout'] = [];
     }
 
-    setIsPermanent(isPermanent) {
+    setIsPermanent( isPermanent ) {
         this.isPermanent = isPermanent;
-        this.rect.set('fill', Rectangle.COLORS.PERMANENT);
         this.deattachSelectedListener();
+        this.fillRectangle(Rectangle.COLORS.PERMANENT);
+        this.deleteImage();
+        this.setImage();
     }
 
-    setIsTemporary(isTemporary) {
+    setIsTemporary( isTemporary ) {
         this.isTemporary = isTemporary;
-        this.rect.set('fill', isTemporary ? Rectangle.COLORS.TEMPORARY : Rectangle.COLORS.REGULAR);
-
+        this.fillRectangle(isTemporary ? Rectangle.COLORS.TEMPORARY : Rectangle.COLORS.REGULAR);
         if (isTemporary) {
             this.attachMouseOverListener();
             this.attachMouseOutListener();
+            this.rect.hoverCursor = "pointer";
         }
         else {
+            this.rect.hoverCursor = "default";
             this.deatachMouseOverListener();
             this.deatachMouseOutListener();
         }
     }
+
+    fillRectangle( color = Rectangle.COLORS.DEFAULT ) {
+        this.rect.set( 'fill', color );
+    }
+
+    setImage() {
+        const width = this.dimension / Rectangle.IMAGE_SCALE_FACTOR;
+        const left = this.column * this.dimension + ((this.dimension - width) / 2);
+        const top = this.row * this.dimension + ((this.dimension - width) / 2);
+        (function(context) {
+            fabric.loadSVGFromURL(Rectangle.IMAGE_PATH, function (objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                obj.left = left;
+                obj.top = top;
+                obj.scaleToWidth(width);
+                obj.scaleToHeight(width);
+                obj.lockMovementX = true;
+                obj.lockMovementY = true;
+                obj.selection = false;
+                obj.hasBorders = false;
+                obj.hasControls = false;
+                obj.hoverCursor = 'default';
+
+                context.get().canvas.add(obj);
+                context.get().canvas.setActiveObject(obj, function() {
+
+                });
+            });
+        })(this);
+    }
+
+    deleteImage() {
+        this.get().canvas._objects.forEach((element, index) => {
+            if(element.type == "path") {
+                this.get().canvas.remove(element);
+                this.get().canvas.renderAll();
+            }
+        });
+    }
 }
 
+Rectangle.IMAGE_PATH = '../app/assets/svg/paw.svg';
+Rectangle.IMAGE_SCALE_FACTOR = 2.5;
 Rectangle.COLORS = {
     BORDER: 'gray',
     REGULAR: 'white',
     PERMANENT: 'rgb(144, 140, 255)',
     TEMPORARY: 'rgb(195, 186, 255)',
     HOVER: 'rgb(195, 186, 0)'
-}
+};
 
 export default Rectangle;
