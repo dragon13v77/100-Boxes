@@ -127,7 +127,7 @@ class Rectangle {
     }
 
     deleteImage() {
-        this.get().canvas._objects.forEach((element, index) => {
+        this.get().canvas._objects.forEach(element => {
             if(element.type == "path") {
                 this.get().canvas.remove(element);
                 this.get().canvas.renderAll();
