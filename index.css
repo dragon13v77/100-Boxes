@@ -1,4 +1,17 @@
 
-#fat_cat {
+#app {
+    text-align: center;
+}
 
+.my_canvas {
+    display: inline-block;
+}
+
+.control_container {
+    display: inline-block;
+    margin: 10px;
+}
+
+.play_controls {
+    margin: 10px 0 20px 0;
 }

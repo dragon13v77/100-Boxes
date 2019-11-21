@@ -78,6 +78,8 @@ function () {
   function Canvas(props) {
     _classCallCheck(this, Canvas);
 
+    this.id = props.id;
+    this.className = 'my_canvas';
     this.canvas = null;
     this.init(props);
     this.create(props);
@@ -94,11 +96,26 @@ function () {
   }, {
     key: "create",
     value: function create(props) {
-      this.canvas = new fabric.Canvas(props.id);
+      this.canvas = new fabric.Canvas(props.id, {
+        containerClass: this.className
+      });
 
       if (props.dimension) {
         this.canvas.setHeight(props.dimension + 1);
         this.canvas.setWidth(props.dimension + 1);
+      }
+    }
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      var el = document.getElementsByClassName(this.className);
+
+      if (el) {
+        el[0].remove();
+      }
+
+      if (this.canvas) {
+        this.canvas.dispose();
       }
     }
   }, {
@@ -144,7 +161,7 @@ function () {
       var left = this.column % this.dimension * this.dimension;
       var top = this.row * this.dimension;
       this.rect = new fabric.Rect({
-        id: this.column + '_' + this.row,
+        id: "".concat(this.column, "_").concat(this.row),
         left: left,
         top: top,
         fill: Rectangle.COLORS.REGULAR,
@@ -177,8 +194,8 @@ function () {
   }, {
     key: "deattachSelectedListener",
     value: function deattachSelectedListener() {
-      //this.rect.off('selected', () => this.clicked(this));
-      this.rect.__eventListeners['selected'] = [];
+      // this.rect.off('selected', () => this.clicked(this));
+      this.rect.__eventListeners.selected = [];
     }
   }, {
     key: "attachMouseOverListener",
@@ -193,8 +210,8 @@ function () {
     key: "deatachMouseOverListener",
     value: function deatachMouseOverListener() {
       // todo: not working need to check why
-      //this.rect.off('mouseover', () => this.mouseOver(this));
-      this.rect.__eventListeners['mouseover'] = [];
+      // this.rect.off('mouseover', () => this.mouseOver(this));
+      this.rect.__eventListeners.mouseover = [];
     }
   }, {
     key: "attachMouseOutListener",
@@ -209,8 +226,8 @@ function () {
     key: "deatachMouseOutListener",
     value: function deatachMouseOutListener() {
       // todo: not working need to check why
-      //this.rect.off('mouseout', () => this.mouseOut(this));
-      this.rect.__eventListeners['mouseout'] = [];
+      // this.rect.off('mouseout', () => this.mouseOut(this));
+      this.rect.__eventListeners.mouseout = [];
     }
   }, {
     key: "setIsPermanent",
@@ -230,9 +247,9 @@ function () {
       if (isTemporary) {
         this.attachMouseOverListener();
         this.attachMouseOutListener();
-        this.rect.hoverCursor = "pointer";
+        this.rect.hoverCursor = 'pointer';
       } else {
-        this.rect.hoverCursor = "default";
+        this.rect.hoverCursor = 'default';
         this.deatachMouseOverListener();
         this.deatachMouseOutListener();
       }
@@ -273,8 +290,8 @@ function () {
     value: function deleteImage() {
       var _this4 = this;
 
-      this.get().canvas._objects.forEach(function (element, index) {
-        if (element.type == "path") {
+      this.get().canvas._objects.forEach(function (element) {
+        if (element.type === 'path') {
           _this4.get().canvas.remove(element);
 
           _this4.get().canvas.renderAll();
@@ -305,8 +322,6 @@ function () {
     _classCallCheck(this, Game);
 
     _defineProperty(this, "rectangleClickedHandler", function (rect) {
-      console.log("RECTANGLE CLICK HANDLER ".concat(rect.rect.id));
-
       if (rect.isTemporary) {
         _this.resetTemporaryRectangles();
 
@@ -323,8 +338,10 @@ function () {
     });
 
     _defineProperty(this, "setTemporaryRectangles", function (rect) {
-      for (var key in Game.CAT_PATTERN) {
-        var patternItem = Game.CAT_PATTERN[key];
+      var patternKeys = Object.keys(Game.CAT_PATTERN);
+
+      for (var key in patternKeys) {
+        var patternItem = Game.CAT_PATTERN[patternKeys[key]];
         var temporaryColumn = rect.column - patternItem.column;
         var temporaryRow = rect.row - patternItem.row;
 
@@ -382,6 +399,13 @@ function () {
   }
 
   _createClass(Game, [{
+    key: "exit",
+    value: function exit() {
+      if (this.layout) {
+        this.layout.destroy();
+      }
+    }
+  }, {
     key: "initCanvas",
     value: function initCanvas(props) {
       this.layout = new Canvas({
@@ -476,11 +500,53 @@ Game.CAT_PATTERN = {
   }
 };
 
-new Game({
-  id: 'fat_cat',
-  rectDimension: 50,
-  rectStrokeWidth: 1,
-  width: 10,
-  height: 10
-});
+var app = function () {
+  var width = 10;
+  var height = 10;
+  var rectDimension = 50;
+  var game = null;
+  return {
+    init: function init() {
+      document.getElementById('input_columns').addEventListener('change', function () {
+        width = parseInt(this.value, 10);
+        width = width < 10 ? 10 : width;
+        width = width > 20 ? 20 : width;
+      });
+      document.getElementById('input_rows').addEventListener('change', function () {
+        height = parseInt(this.value, 10);
+        height = height < 10 ? 10 : height;
+        height = height > 20 ? 20 : height;
+      });
+      document.getElementById('input_cell_width').addEventListener('change', function () {
+        rectDimension = parseInt(this.value, 10);
+        rectDimension = rectDimension < 20 ? 20 : rectDimension;
+        rectDimension = rectDimension > 100 ? 100 : rectDimension;
+      });
+      var that = this;
+      document.getElementById('play_game').addEventListener('click', function () {
+        that.play({
+          width: width,
+          height: height,
+          rectDimension: rectDimension
+        });
+      });
+      return this;
+    },
+    play: function play(props) {
+      if (game) {
+        game.exit();
+      }
+
+      game = new Game({
+        id: 'fat_cat',
+        rectStrokeWidth: 1,
+        rectDimension: props && props.rectDimension || rectDimension,
+        width: props && props.width || width,
+        height: props && props.height || height
+      });
+    }
+  };
+}();
+
+app.init().play();
 //# sourceMappingURL=fat_cat.js.map

@@ -20,6 +20,12 @@ class Game {
 		this.createRectangles(props);
 	}
 
+	exit() {
+		if (this.layout) {
+			this.layout.destroy();
+		}
+	}
+
 	initCanvas(props) {
 		this.layout = new Canvas({
 			id: props.id,
@@ -61,69 +67,69 @@ class Game {
 		});
 	}
 
-    rectangleClickedHandler = (rect) => {
-    	console.log(`RECTANGLE CLICK HANDLER ${rect.rect.id}`);
-    	if (rect.isTemporary) {
-    		this.resetTemporaryRectangles();
-    		this.setPermanentRectangle(rect);
-    		this.setTemporaryRectangles(rect);
-    	}
-    }
+	rectangleClickedHandler = (rect) => {
+		if (rect.isTemporary) {
+			this.resetTemporaryRectangles();
+			this.setPermanentRectangle(rect);
+			this.setTemporaryRectangles(rect);
+		}
+	}
 
-    setPermanentRectangle = (rect) => {
-    	this.state.permanent.push(rect);
-    	rect.setIsPermanent(true);
-    }
+	setPermanentRectangle = (rect) => {
+		this.state.permanent.push(rect);
+		rect.setIsPermanent(true);
+	}
 
-    setTemporaryRectangles = (rect) => {
-    	for (const key in Game.CAT_PATTERN) {
-    		const patternItem = Game.CAT_PATTERN[key];
-    		const temporaryColumn = rect.column - patternItem.column;
-    		const temporaryRow = rect.row - patternItem.row;
-    		if (temporaryColumn >= 0 && temporaryColumn < this.width && temporaryRow >= 0 && temporaryRow < this.height) {
-    			const tempRectangle = this.rectangles[temporaryColumn][temporaryRow];
-    			// do not make temporary of permanent rectangle
-    			if (!tempRectangle.isPermanent) {
-    				tempRectangle.setIsTemporary(true);
-    				this.state.temporary.push(tempRectangle);
-    			}
-    		}
-    		// console.log('TEMP ITEM => Column: ' + temporaryColumn + ' | Row: ' + temporaryRow);
-    	}
-    	this.checkScore();
-    }
+	setTemporaryRectangles = (rect) => {
+		const patternKeys = Object.keys(Game.CAT_PATTERN);
+		for (const key in patternKeys) {
+			const patternItem = Game.CAT_PATTERN[patternKeys[key]];
+			const temporaryColumn = rect.column - patternItem.column;
+			const temporaryRow = rect.row - patternItem.row;
+			if (temporaryColumn >= 0 && temporaryColumn < this.width && temporaryRow >= 0 && temporaryRow < this.height) {
+				const tempRectangle = this.rectangles[temporaryColumn][temporaryRow];
+				// do not make temporary of permanent rectangle
+				if (!tempRectangle.isPermanent) {
+					tempRectangle.setIsTemporary(true);
+					this.state.temporary.push(tempRectangle);
+				}
+			}
+			// console.log('TEMP ITEM => Column: ' + temporaryColumn + ' | Row: ' + temporaryRow);
+		}
+		this.checkScore();
+	}
 
-    resetTemporaryRectangles = () => {
-    	this.state.temporary = [];
-    	this.rectangles.map((column) => {
-    		column.map((rectangle) => {
-    			if (!rectangle.isPermanent) {
-    				rectangle.setIsTemporary(false);
-    			}
-    		});
-    	});
-    }
+	resetTemporaryRectangles = () => {
+		this.state.temporary = [];
+		this.rectangles.map((column) => {
+			column.map((rectangle) => {
+				if (!rectangle.isPermanent) {
+					rectangle.setIsTemporary(false);
+				}
+			});
+		});
+	}
 
     rectangleMouseOverHandler = (rect) => {
-    	rect.get().set('fill', Rectangle.COLORS.HOVER);
-    	rect.get().canvas.renderAll();
-    	// console.log('RECTANGLE MOUSE OVER');
-    }
+		rect.get().set('fill', Rectangle.COLORS.HOVER);
+		rect.get().canvas.renderAll();
+		// console.log('RECTANGLE MOUSE OVER');
+	}
 
-    rectangleMouseOutHandler = (rect) => {
-    	rect.get().set('fill', Rectangle.COLORS.TEMPORARY);
-    	rect.get().canvas.renderAll();
-    	// console.log('RECTANGLE MOUSE OUT');
-    }
+	rectangleMouseOutHandler = (rect) => {
+		rect.get().set('fill', Rectangle.COLORS.TEMPORARY);
+		rect.get().canvas.renderAll();
+		// console.log('RECTANGLE MOUSE OUT');
+	}
 
-    checkScore() {
-    	if (this.state.temporary.length === 0) {
-    		alert('Mjau mrnjau :(');
-    	}
-    	if (this.state.permanent === this.width * this.height) {
-    		alert('Mjau mrnjau :)');
-    	}
-    }
+	checkScore() {
+		if (this.state.temporary.length === 0) {
+			alert('Mjau mrnjau :(');
+		}
+		if (this.state.permanent === this.width * this.height) {
+			alert('Mjau mrnjau :)');
+		}
+	}
 }
 
 Game.CAT_PATTERN = {

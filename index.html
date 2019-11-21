@@ -9,7 +9,27 @@
     <title>100 Boxes</title>
 </head>
 <body id="body">
-    <div id="app"></div>
+    <div id="app">
+        <h1> X BOXES </h1>
+        <div class="app_controls">
+            <div class="control_container app_controls_columns">
+                <span>Columns: </span>
+                <input id="input_columns" TYPE="NUMBER" MIN="10" MAX="20" STEP="1" VALUE="10" SIZE="10">
+            </div>
+            <div class="control_container app_controls_rows">
+                <span>Rows: </span>
+                <input id="input_rows" TYPE="NUMBER" MIN="10" MAX="20" STEP="1" VALUE="10" SIZE="10">
+            </div>
+            <div class="control_container app_controls_cell_width">
+                <span>Cell width: </span>
+                <input id="input_cell_width" TYPE="NUMBER" MIN="20" MAX="100" STEP="1" VALUE="50" SIZE="10">
+            </div>
+        </div>
+        <div class="play_controls">
+            <button id="play_game" style="clear: both; display: inline-block"> PLAY </button>
+        </div>
+
+    </div>
     <!--LOAD APP-->
     <script type="module" src="./app.js"></script>
 </body>
