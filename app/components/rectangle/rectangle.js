@@ -19,12 +19,12 @@ class Rectangle {
 	}
 
 	create(props) {
-		const left = (this.column % this.dimension) * this.dimension;
+		const left = this.column * this.dimension;
 		const top = this.row * this.dimension;
 		this.rect = new fabric.Rect({
 			id: `${this.column}_${this.row}`,
-			left,
-			top,
+			left: left,
+			top: top,
 			fill: Rectangle.COLORS.REGULAR,
 			width: this.dimension,
 			height: this.dimension,

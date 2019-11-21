@@ -21,10 +21,8 @@ class Canvas {
 		this.canvas = new fabric.Canvas(props.id, {
 			containerClass: this.className
 		});
-		if (props.dimension) {
-			this.canvas.setHeight(props.dimension + 1);
-			this.canvas.setWidth(props.dimension + 1);
-		}
+		this.canvas.setHeight(props.height + 1);
+		this.canvas.setWidth(props.width + 1);
 	}
 
 	destroy() {

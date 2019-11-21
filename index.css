@@ -12,6 +12,10 @@
     margin: 10px;
 }
 
+.control_container input {
+    width: 40px;
+}
+
 .play_controls {
     margin: 10px 0 20px 0;
 }
