@@ -4,6 +4,8 @@
 class Rectangle {
 
     constructor (props) {
+        // todo: some of this props need to be private
+        // switch to revealing module pattern and make it local
         this.rect = null;
         this.dimension = props.dimension || 50;
         this.column = props.column;
@@ -12,7 +14,7 @@ class Rectangle {
         this.mouseOver = props.mouseOver;
         this.mouseOut = props.mouseOut;
         this.isPermanent = false;
-        this.isTemporary = false;
+        this.isTemporary = true;
         this.create(props);
         this.attachSelectedListener();
     }
@@ -24,10 +26,10 @@ class Rectangle {
             id: this.column + '_' + this.row,
             left: left,
             top: top,
-            fill: props.fill || 'white',
+            fill: Rectangle.COLORS.REGULAR,
             width: this.dimension,
             height: this.dimension,
-            stroke: 'gray',
+            stroke: Rectangle.COLORS.BORDER,
             strokeWidth: props.strokeWidth || 1,
             lockMovementX: true,
             lockMovementY: true,
@@ -54,7 +56,9 @@ class Rectangle {
     }
 
     deatachMouseOverListener() {
-        this.rect.off('mouseover', () => this.mouseOver(this));
+        // not working need to check why
+        //this.rect.off('mouseover', () => this.mouseOver(this));
+        this.rect.__eventListeners['mouseover'] = [];
     }
 
     attachMouseOutListener() {
@@ -62,7 +66,9 @@ class Rectangle {
     }
 
     deatachMouseOutListener() {
-        this.rect.off('mouseout', () => this.mouseOut(this));
+        // not working need to check why
+        //this.rect.off('mouseout', () => this.mouseOut(this));
+        this.rect.__eventListeners['mouseout'] = [];
     }
 
     setIsPermanent(isPermanent) {
@@ -73,21 +79,22 @@ class Rectangle {
 
     setIsTemporary(isTemporary) {
         this.isTemporary = isTemporary;
-        this.rect.set('fill', Rectangle.COLORS.TEMPORARY);
+        this.rect.set('fill', isTemporary ? Rectangle.COLORS.TEMPORARY : Rectangle.COLORS.REGULAR);
+
         if (isTemporary) {
             this.attachMouseOverListener();
             this.attachMouseOutListener();
-
         }
         else {
-            this.deattachMouseOverListener();
+            this.deatachMouseOverListener();
             this.deatachMouseOutListener();
         }
-
     }
 }
 
 Rectangle.COLORS = {
+    BORDER: 'gray',
+    REGULAR: 'white',
     PERMANENT: 'rgb(144, 140, 255)',
     TEMPORARY: 'rgb(195, 186, 255)',
     HOVER: 'rgb(195, 186, 0)'

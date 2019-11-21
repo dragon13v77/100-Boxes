@@ -18,7 +18,7 @@ class Game {
         // init canvas
         this.initCanvas(props);
         this.initRectangles();
-        this.createRectangles();
+        this.createRectangles(props);
     }
 
     initCanvas(props) {
@@ -35,22 +35,25 @@ class Game {
         }
     }
 
-    createRectangles() {
+    createRectangles(props) {
         for(let i = 0; i < this.width; i++) {
             for(let j = 0; j < this.height; j++) {
-                const rect = this.getRectangle(i, j);
+                const rect = this.getRectangle({
+                    ...props,
+                    column: i,
+                    row: j
+                });
                 this.rectangles[i][j] = rect;
-
                 this.layout.add(rect.get());
                 //console.log(this.rectangles[i][j]);
             }
         }
     }
 
-    getRectangle(column, row) {
+    getRectangle(props) {
         return new Rectangle({
-            column: column,
-            row: row,
+            column: props.column,
+            row: props.row,
             dimension: this.rectDimension,
             strokeWidth: this.rectStrokeWidth,
             clicked: this.rectangleClickedHandler,
@@ -60,11 +63,11 @@ class Game {
     }
 
     rectangleClickedHandler = (rect) =>  {
-        console.log('RECTANGLE CLICKED HANDLER');
-        console.log(rect);
-        this.setState(rect);
-        this.setPermanentRectangle(rect);
-        this.setTemporaryRectangles(rect);
+        if (rect.isTemporary) {
+            this.resetTemporaryRectangles();
+            this.setPermanentRectangle(rect);
+            this.setTemporaryRectangles(rect);
+        }
     }
 
     setPermanentRectangle = (rect) => {
@@ -79,10 +82,26 @@ class Game {
             const temporaryRow = rect.row - patternItem.row;
             if (temporaryColumn >=0 && temporaryColumn < this.width && temporaryRow >= 0 && temporaryRow < this.height) {
                 const tempRectangle = this.rectangles[temporaryColumn][temporaryRow];
-                tempRectangle.setIsTemporary(true);
+                // do not make temporary of permanent rectangle
+                if (!tempRectangle.isPermanent) {
+                    tempRectangle.setIsTemporary(true);
+                    this.state.temporary.push(tempRectangle);
+                }
             }
             //console.log('TEMP ITEM => Column: ' + temporaryColumn + ' | Row: ' + temporaryRow);
         }
+        this.checkScore();
+    }
+
+    resetTemporaryRectangles = () => {
+        this.state.temporary = [];
+        this.rectangles.map(column => {
+            column.map( rectangle => {
+                if (!rectangle.isPermanent){
+                    rectangle.setIsTemporary(false);
+                }
+            });
+        });
     }
 
     rectangleMouseOverHandler = (rect) => {
@@ -97,8 +116,10 @@ class Game {
         //console.log('RECTANGLE MOUSE OUT');
     }
 
-    setState = (rect) => {
-
+    checkScore() {
+        if (this.state.temporary.length === 0) {
+            alert('Mjau mrnjau :(');
+        }
     }
 }
 
