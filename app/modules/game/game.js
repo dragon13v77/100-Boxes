@@ -78,12 +78,16 @@ class Game {
 			this.setPermanentRectangle(rect);
 			this.setTemporaryRectangles(rect);
 		}
+		rect.rect.canvas.setActiveObject(rect.rect.canvas._objects[0]);
 	}
 
 	setPermanentRectangle = (rect) => {
 		this.state.permanent.push(rect);
 		rect.setIsPermanent(true);
-		this.layout.setImagePosition(rect);
+		this.layout.image.setImagePosition({
+			column: rect.column,
+			row: rect.row,
+		});
 	}
 
 	setTemporaryRectangles = (rect) => {
@@ -120,7 +124,7 @@ class Game {
 		rect.get().set('fill', Rectangle.COLORS.HOVER);
 		rect.get().canvas.renderAll();
 		// console.log('RECTANGLE MOUSE OVER');
-    }
+	}
 
 	rectangleMouseOutHandler = (rect) => {
 		rect.get().set('fill', Rectangle.COLORS.TEMPORARY);

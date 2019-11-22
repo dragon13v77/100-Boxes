@@ -70,8 +70,64 @@ function _objectSpread2(target) {
 }
 
 /**
+ * Image component
+ */
+var Image =
+/*#__PURE__*/
+function () {
+  function Image(props) {
+    _classCallCheck(this, Image);
+
+    this.containerWidth = props.rectDimension || 0;
+    this.width = this.containerWidth / Image.SCALE_FACTOR;
+    this.left = props.left || 0;
+    this.top = props.top || 0;
+    this.imageObject = new fabric.Path(Image.PATH);
+    this.imageObject.set({
+      left: this.left,
+      top: this.top
+    });
+    this.imageObject.scaleToWidth(this.width);
+    this.imageObject.scaleToHeight(this.width);
+    this.imageObject.selection = false;
+    this.imageObject.hasBorders = false;
+    this.imageObject.hasControls = false;
+    this.imageObject.hoverCursor = 'default';
+    this.toggleImageVisibillity(false);
+    this.attachListeners();
+  }
+
+  _createClass(Image, [{
+    key: "toggleImageVisibillity",
+    value: function toggleImageVisibillity(isVisible) {
+      this.imageObject.opacity = isVisible ? 1 : 0;
+    }
+  }, {
+    key: "setImagePosition",
+    value: function setImagePosition(props) {
+      var left = props.column * this.containerWidth + (this.containerWidth - this.width) / 2;
+      var top = props.row * this.containerWidth + (this.containerWidth - this.width) / 2;
+      this.toggleImageVisibillity(true);
+      this.imageObject.set({
+        left: left,
+        top: top
+      });
+    }
+  }, {
+    key: "attachListeners",
+    value: function attachListeners() {}
+  }]);
+
+  return Image;
+}();
+
+Image.SCALE_FACTOR = 2.5;
+Image.PATH = "M256 224c-79.41 0-192 122.76-192 200.25 0 34.9 26.81 55.75 71.74 55.75 48.84 0 81.09-25.08 120.26-25.08 39.51 0 71.85 25.08 120.26 25.08 44.93 0 71.74-20.85 71.74-55.75C448 346.76 335.41 224 256 224zm-147.28-12.61c-10.4-34.65-42.44-57.09-71.56-50.13-29.12 6.96-44.29 40.69-33.89 75.34 10.4 34.65 42.44 57.09 71.56 50.13 29.12-6.96 44.29-40.69 33.89-75.34zm84.72-20.78c30.94-8.14 46.42-49.94 34.58-93.36s-46.52-72.01-77.46-63.87-46.42 49.94-34.58 93.36c11.84 43.42 46.53 72.02 77.46 63.87zm281.39-29.34c-29.12-6.96-61.15 15.48-71.56 50.13-10.4 34.65 4.77 68.38 33.89 75.34 29.12 6.96 61.15-15.48 71.56-50.13 10.4-34.65-4.77-68.38-33.89-75.34zm-156.27 29.34c30.94 8.14 65.62-20.45 77.46-63.87 11.84-43.42-3.64-85.21-34.58-93.36s-65.62 20.45-77.46 63.87c-11.84 43.42 3.64 85.22 34.58 93.36z";
+
+/**
  * Canvas component
  */
+
 var Canvas =
 /*#__PURE__*/
 function () {
@@ -83,7 +139,7 @@ function () {
     this.canvas = null;
     this.init(props);
     this.create(props);
-    this.attachListeners();
+    this.createImage(props);
   }
 
   _createClass(Canvas, [{
@@ -116,12 +172,20 @@ function () {
       }
     }
   }, {
-    key: "attachListeners",
-    value: function attachListeners() {}
-  }, {
     key: "add",
     value: function add(obj) {
       this.canvas.add(obj);
+    }
+  }, {
+    key: "insertAt",
+    value: function insertAt(obj, index) {
+      this.canvas.insertAt(obj, index, false);
+    }
+  }, {
+    key: "createImage",
+    value: function createImage(props) {
+      this.image = new Image(props);
+      this.canvas.insertAt(this.image.imageObject, 0);
     }
   }]);
 
@@ -232,8 +296,6 @@ function () {
       this.isPermanent = isPermanent;
       this.deattachSelectedListener();
       this.fillRectangle(Rectangle.COLORS.PERMANENT);
-      this.deleteImage();
-      this.setImage();
     }
   }, {
     key: "setIsTemporary",
@@ -257,51 +319,11 @@ function () {
       var color = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Rectangle.COLORS.DEFAULT;
       this.rect.set('fill', color);
     }
-  }, {
-    key: "setImage",
-    value: function setImage() {
-      var width = this.dimension / Rectangle.IMAGE_SCALE_FACTOR;
-      var left = this.column * this.dimension + (this.dimension - width) / 2;
-      var top = this.row * this.dimension + (this.dimension - width) / 2;
-
-      (function (context) {
-        fabric.loadSVGFromURL(Rectangle.IMAGE_PATH, function (objects, options) {
-          var obj = fabric.util.groupSVGElements(objects, options);
-          obj.left = left;
-          obj.top = top;
-          obj.scaleToWidth(width);
-          obj.scaleToHeight(width);
-          obj.lockMovementX = true;
-          obj.lockMovementY = true;
-          obj.selection = false;
-          obj.hasBorders = false;
-          obj.hasControls = false;
-          obj.hoverCursor = 'default';
-          context.get().canvas.add(obj);
-          context.get().canvas.setActiveObject(obj, function () {});
-        });
-      })(this);
-    }
-  }, {
-    key: "deleteImage",
-    value: function deleteImage() {
-      var _this4 = this;
-
-      this.get().canvas._objects.forEach(function (element) {
-        if (element.type === 'path') {
-          _this4.get().canvas.remove(element);
-
-          _this4.get().canvas.renderAll();
-        }
-      });
-    }
   }]);
 
   return Rectangle;
 }();
 
-Rectangle.IMAGE_PATH = '../app/assets/svg/paw.svg';
-Rectangle.IMAGE_SCALE_FACTOR = 2.5;
 Rectangle.COLORS = {
   BORDER: 'gray',
   REGULAR: 'white',
@@ -326,12 +348,19 @@ function () {
 
         _this.setTemporaryRectangles(rect);
       }
+
+      rect.rect.canvas.setActiveObject(rect.rect.canvas._objects[0]);
     });
 
     _defineProperty(this, "setPermanentRectangle", function (rect) {
       _this.state.permanent.push(rect);
 
       rect.setIsPermanent(true);
+
+      _this.layout.image.setImagePosition({
+        column: rect.column,
+        row: rect.row
+      });
     });
 
     _defineProperty(this, "setTemporaryRectangles", function (rect) {
@@ -409,6 +438,7 @@ function () {
     value: function initCanvas(props) {
       this.layout = new Canvas({
         id: props.id,
+        rectDimension: props.rectDimension,
         width: props.rectDimension * this.width + this.rectStrokeWidth,
         height: props.rectDimension * this.height + this.rectStrokeWidth
       });
