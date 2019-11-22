@@ -31,6 +31,7 @@ class Game {
 	initCanvas(props) {
 		this.layout = new Canvas({
 			id: props.id,
+			rectDimension: props.rectDimension,
 			width: props.rectDimension * this.width + this.rectStrokeWidth,
 			height: props.rectDimension * this.height + this.rectStrokeWidth,
 		});
@@ -82,6 +83,7 @@ class Game {
 	setPermanentRectangle = (rect) => {
 		this.state.permanent.push(rect);
 		rect.setIsPermanent(true);
+		this.layout.setImagePosition(rect);
 	}
 
 	setTemporaryRectangles = (rect) => {

@@ -76,8 +76,6 @@ class Rectangle {
 		this.isPermanent = isPermanent;
 		this.deattachSelectedListener();
 		this.fillRectangle(Rectangle.COLORS.PERMANENT);
-		this.deleteImage();
-		this.setImage();
 	}
 
 	setIsTemporary(isTemporary) {
@@ -97,45 +95,8 @@ class Rectangle {
 	fillRectangle(color = Rectangle.COLORS.DEFAULT) {
 		this.rect.set('fill', color);
 	}
-
-	setImage() {
-		const width = this.dimension / Rectangle.IMAGE_SCALE_FACTOR;
-		const left = this.column * this.dimension + ((this.dimension - width) / 2);
-		const top = this.row * this.dimension + ((this.dimension - width) / 2);
-		(function (context) {
-			fabric.loadSVGFromURL(Rectangle.IMAGE_PATH, (objects, options) => {
-				const obj = fabric.util.groupSVGElements(objects, options);
-				obj.left = left;
-				obj.top = top;
-				obj.scaleToWidth(width);
-				obj.scaleToHeight(width);
-				obj.lockMovementX = true;
-				obj.lockMovementY = true;
-				obj.selection = false;
-				obj.hasBorders = false;
-				obj.hasControls = false;
-				obj.hoverCursor = 'default';
-
-				context.get().canvas.add(obj);
-				context.get().canvas.setActiveObject(obj, () => {
-
-				});
-			});
-		}(this));
-	}
-
-	deleteImage() {
-		this.get().canvas._objects.forEach((element) => {
-			if (element.type === 'path') {
-				this.get().canvas.remove(element);
-				this.get().canvas.renderAll();
-			}
-		});
-	}
 }
 
-Rectangle.IMAGE_PATH = '../app/assets/svg/paw.svg';
-Rectangle.IMAGE_SCALE_FACTOR = 2.5;
 Rectangle.COLORS = {
 	BORDER: 'gray',
 	REGULAR: 'white',
