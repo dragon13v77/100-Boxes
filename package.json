@@ -9,6 +9,7 @@
   },
   "scripts": {
     "serve": "http-server ./ -p 3002 -c=0 -o http://127.0.0.1:3002/index.html",
+    "lint": "eslint ./app/ ./app.js ./index.html",
     "roll": "rollup --config",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

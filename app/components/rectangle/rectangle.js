@@ -23,8 +23,8 @@ class Rectangle {
 		const top = this.row * this.dimension;
 		this.rect = new fabric.Rect({
 			id: `${this.column}_${this.row}`,
-			left: left,
-			top: top,
+			left,
+			top,
 			fill: Rectangle.COLORS.REGULAR,
 			width: this.dimension,
 			height: this.dimension,

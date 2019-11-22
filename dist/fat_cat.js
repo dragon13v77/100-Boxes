@@ -99,11 +99,8 @@ function () {
       this.canvas = new fabric.Canvas(props.id, {
         containerClass: this.className
       });
-
-      if (props.dimension) {
-        this.canvas.setHeight(props.dimension + 1);
-        this.canvas.setWidth(props.dimension + 1);
-      }
+      this.canvas.setHeight(props.height + 1);
+      this.canvas.setWidth(props.width + 1);
     }
   }, {
     key: "destroy",
@@ -158,7 +155,7 @@ function () {
   _createClass(Rectangle, [{
     key: "create",
     value: function create(props) {
-      var left = this.column % this.dimension * this.dimension;
+      var left = this.column * this.dimension;
       var top = this.row * this.dimension;
       this.rect = new fabric.Rect({
         id: "".concat(this.column, "_").concat(this.row),
@@ -338,10 +335,10 @@ function () {
     });
 
     _defineProperty(this, "setTemporaryRectangles", function (rect) {
-      var patternKeys = Object.keys(Game.CAT_PATTERN);
+      var patternKeys = Object.keys(_this.pattern);
 
       for (var key in patternKeys) {
-        var patternItem = Game.CAT_PATTERN[patternKeys[key]];
+        var patternItem = _this.pattern[patternKeys[key]];
         var temporaryColumn = rect.column - patternItem.column;
         var temporaryRow = rect.row - patternItem.row;
 
@@ -388,6 +385,7 @@ function () {
       temporary: []
     };
     this.rectangles = null;
+    this.pattern = props.pattern && Game.CAT_PATTERN[props.pattern] || Game.CAT_PATTERN.PATTERN_2;
     this.rectDimension = props.rectDimension || null;
     this.rectStrokeWidth = props.rectStrokeWidth || null;
     this.width = props && props.width && props.width || 10;
@@ -396,6 +394,7 @@ function () {
     this.initCanvas(props);
     this.initRectangles();
     this.createRectangles(props);
+    this.setScore(0);
   }
 
   _createClass(Game, [{
@@ -410,7 +409,8 @@ function () {
     value: function initCanvas(props) {
       this.layout = new Canvas({
         id: props.id,
-        dimension: props.rectDimension * this.width + this.rectStrokeWidth
+        width: props.rectDimension * this.width + this.rectStrokeWidth,
+        height: props.rectDimension * this.height + this.rectStrokeWidth
       });
     }
   }, {
@@ -421,6 +421,8 @@ function () {
       for (var i = 0; i < this.width; i++) {
         this.rectangles[i] = new Array(this.height);
       }
+
+      console.log(this.rectangles);
     }
   }, {
     key: "createRectangles",
@@ -456,9 +458,16 @@ function () {
         alert('Mjau mrnjau :(');
       }
 
-      if (this.state.permanent === this.width * this.height) {
+      if (this.state.permanent.length === this.width * this.height) {
         alert('Mjau mrnjau :)');
       }
+
+      this.setScore(this.state.permanent.length);
+    }
+  }, {
+    key: "setScore",
+    value: function setScore(score) {
+      document.getElementById('score').innerHTML = " SCORE: ".concat(score, " / ").concat(this.width * this.height);
     }
   }]);
 
@@ -466,68 +475,151 @@ function () {
 }();
 
 Game.CAT_PATTERN = {
-  stage_1: {
-    column: 0,
-    row: 3
+  PATTERN_1: {
+    stage_1: {
+      column: 0,
+      row: 2
+    },
+    stage_2: {
+      column: 1,
+      row: 1
+    },
+    stage_3: {
+      column: 2,
+      row: 0
+    },
+    stage_4: {
+      column: 1,
+      row: -1
+    },
+    stage_5: {
+      column: 0,
+      row: -2
+    },
+    stage_6: {
+      column: -1,
+      row: -1
+    },
+    stage_7: {
+      column: -2,
+      row: 0
+    },
+    stage_8: {
+      column: -1,
+      row: 1
+    }
   },
-  stage_2: {
-    column: 2,
-    row: 2
+  PATTERN_2: {
+    stage_1: {
+      column: 0,
+      row: 3
+    },
+    stage_2: {
+      column: 2,
+      row: 2
+    },
+    stage_3: {
+      column: 3,
+      row: 0
+    },
+    stage_4: {
+      column: 2,
+      row: -2
+    },
+    stage_5: {
+      column: 0,
+      row: -3
+    },
+    stage_6: {
+      column: -2,
+      row: -2
+    },
+    stage_7: {
+      column: -3,
+      row: 0
+    },
+    stage_8: {
+      column: -2,
+      row: 2
+    }
   },
-  stage_3: {
-    column: 3,
-    row: 0
-  },
-  stage_4: {
-    column: 2,
-    row: -2
-  },
-  stage_5: {
-    column: 0,
-    row: -3
-  },
-  stage_6: {
-    column: -2,
-    row: -2
-  },
-  stage_7: {
-    column: -3,
-    row: 0
-  },
-  stage_8: {
-    column: -2,
-    row: 2
+  PATTERN_3: {
+    stage_1: {
+      column: 0,
+      row: 4
+    },
+    stage_2: {
+      column: 3,
+      row: 3
+    },
+    stage_3: {
+      column: 4,
+      row: 0
+    },
+    stage_4: {
+      column: 3,
+      row: -3
+    },
+    stage_5: {
+      column: 0,
+      row: -4
+    },
+    stage_6: {
+      column: -3,
+      row: -3
+    },
+    stage_7: {
+      column: -4,
+      row: 0
+    },
+    stage_8: {
+      column: -3,
+      row: 3
+    }
   }
 };
 
 var app = function () {
+  var maxWidth = 50;
+  var maxHeight = 50;
+  var maxDimension = 100;
   var width = 10;
   var height = 10;
   var rectDimension = 50;
+  var pattern = null;
   var game = null;
   return {
     init: function init() {
+      document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('input_columns').setAttribute('max', maxWidth);
+        document.getElementById('input_rows').setAttribute('max', maxHeight);
+        document.getElementById('input_cell_width').setAttribute('max', maxDimension);
+      });
       document.getElementById('input_columns').addEventListener('change', function () {
         width = parseInt(this.value, 10);
         width = width < 10 ? 10 : width;
-        width = width > 20 ? 20 : width;
+        width = width > maxWidth ? maxWidth : width;
       });
       document.getElementById('input_rows').addEventListener('change', function () {
         height = parseInt(this.value, 10);
         height = height < 10 ? 10 : height;
-        height = height > 20 ? 20 : height;
+        height = height > maxHeight ? maxHeight : height;
       });
       document.getElementById('input_cell_width').addEventListener('change', function () {
         rectDimension = parseInt(this.value, 10);
         rectDimension = rectDimension < 20 ? 20 : rectDimension;
-        rectDimension = rectDimension > 100 ? 100 : rectDimension;
+        rectDimension = rectDimension > maxDimension ? maxDimension : rectDimension;
+      });
+      document.getElementById('input_pattern').addEventListener('change', function () {
+        pattern = this.value;
       });
       var that = this;
       document.getElementById('play_game').addEventListener('click', function () {
         that.play({
           width: width,
           height: height,
-          rectDimension: rectDimension
+          rectDimension: rectDimension,
+          pattern: pattern
         });
       });
       return this;
@@ -542,7 +634,8 @@ var app = function () {
         rectStrokeWidth: 1,
         rectDimension: props && props.rectDimension || rectDimension,
         width: props && props.width || width,
-        height: props && props.height || height
+        height: props && props.height || height,
+        pattern: props && props.pattern
       });
     }
   };

@@ -1,19 +1,18 @@
 import Game from './app/modules/game/game.js';
 
 const app = (function () {
-
 	const maxWidth = 50;
 	const maxHeight = 50;
 	const maxDimension = 100;
 	let width = 10;
 	let height = 10;
-	let rectDimension = 50
+	let rectDimension = 50;
 	let pattern = null;
 	let game = null;
 
 	return {
 		init() {
-			document.addEventListener('DOMContentLoaded', function() {
+			document.addEventListener('DOMContentLoaded', () => {
 				document.getElementById('input_columns').setAttribute('max', maxWidth);
 				document.getElementById('input_rows').setAttribute('max', maxHeight);
 				document.getElementById('input_cell_width').setAttribute('max', maxDimension);
@@ -44,10 +43,10 @@ const app = (function () {
 			const that = this;
 			document.getElementById('play_game').addEventListener('click', () => {
 				that.play({
-					width: width,
-					height: height,
-					rectDimension: rectDimension,
-					pattern: pattern,
+					width,
+					height,
+					rectDimension,
+					pattern,
 				});
 			});
 			return this;

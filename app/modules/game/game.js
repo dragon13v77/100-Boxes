@@ -41,7 +41,7 @@ class Game {
 		for (let i = 0; i < this.width; i++) {
 			this.rectangles[i] = new Array(this.height);
 		}
-		console.log(this.rectangles)
+		console.log(this.rectangles);
 	}
 
 	createRectangles(props) {
@@ -118,7 +118,7 @@ class Game {
 		rect.get().set('fill', Rectangle.COLORS.HOVER);
 		rect.get().canvas.renderAll();
 		// console.log('RECTANGLE MOUSE OVER');
-	}
+    }
 
 	rectangleMouseOutHandler = (rect) => {
 		rect.get().set('fill', Rectangle.COLORS.TEMPORARY);
@@ -137,7 +137,7 @@ class Game {
 	}
 
 	setScore(score) {
-		document.getElementById('score').innerHTML = ' SCORE: ' + score + ' / ' + this.width * this.height;
+		document.getElementById('score').innerHTML = ` SCORE: ${score} / ${this.width * this.height}`;
 	}
 }
 

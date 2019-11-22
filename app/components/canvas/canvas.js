@@ -19,7 +19,7 @@ class Canvas {
 
 	create(props) {
 		this.canvas = new fabric.Canvas(props.id, {
-			containerClass: this.className
+			containerClass: this.className,
 		});
 		this.canvas.setHeight(props.height + 1);
 		this.canvas.setWidth(props.width + 1);
