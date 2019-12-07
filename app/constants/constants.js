@@ -49,5 +49,18 @@ export const PATTERN = {
 				stage_8: {column: -3, row: 3},
 			}
 		},
+		PATTERN_4: {
+			NAME: 'Insane',
+			STAGES: {
+				stage_1: {column: 0, row: 2},
+				stage_2: {column: 3, row: 3},
+				stage_3: {column: 1, row: 0},
+				stage_4: {column: 2, row: -3},
+				stage_5: {column: 0, row: -2},
+				stage_6: {column: -2, row: -2},
+				stage_7: {column: -3, row: 0},
+				stage_8: {column: -2, row: 3},
+			}
+		},
 	},
 }
