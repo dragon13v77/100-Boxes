@@ -1,3 +1,4 @@
+import {COLORS} from "../../constants/constants.js";
 /**
  * Rectangle component
  */
@@ -25,10 +26,10 @@ class Rectangle {
 			id: `${this.column}_${this.row}`,
 			left,
 			top,
-			fill: Rectangle.COLORS.REGULAR,
+			fill: COLORS.REGULAR,
 			width: this.dimension,
 			height: this.dimension,
-			stroke: Rectangle.COLORS.BORDER,
+			stroke: COLORS.BORDER,
 			strokeWidth: props.strokeWidth || 1,
 			lockMovementX: true,
 			lockMovementY: true,
@@ -75,12 +76,12 @@ class Rectangle {
 	setIsPermanent(isPermanent) {
 		this.isPermanent = isPermanent;
 		this.deattachSelectedListener();
-		this.fillRectangle(Rectangle.COLORS.PERMANENT);
+		this.fillRectangle(COLORS.PERMANENT);
 	}
 
 	setIsTemporary(isTemporary) {
 		this.isTemporary = isTemporary;
-		this.fillRectangle(isTemporary ? Rectangle.COLORS.TEMPORARY : Rectangle.COLORS.REGULAR);
+		this.fillRectangle(isTemporary ? COLORS.TEMPORARY : COLORS.REGULAR);
 		if (isTemporary) {
 			this.attachMouseOverListener();
 			this.attachMouseOutListener();
@@ -92,17 +93,9 @@ class Rectangle {
 		}
 	}
 
-	fillRectangle(color = Rectangle.COLORS.DEFAULT) {
+	fillRectangle(color = COLORS.DEFAULT) {
 		this.rect.set('fill', color);
 	}
 }
-
-Rectangle.COLORS = {
-	BORDER: 'gray',
-	REGULAR: 'white',
-	PERMANENT: 'rgb(144, 140, 255)',
-	TEMPORARY: 'rgb(195, 186, 255)',
-	HOVER: 'rgb(195, 186, 0)',
-};
 
 export default Rectangle;
