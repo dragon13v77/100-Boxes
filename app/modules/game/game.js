@@ -1,5 +1,6 @@
 import Canvas from '../../components/canvas/canvas.js';
 import Rectangle from '../../components/rectangle/rectangle.js';
+import {COLORS} from "../../constants/constants.js";
 
 class Game {
 	constructor(props) {
@@ -9,7 +10,7 @@ class Game {
 			temporary: [],
 		};
 		this.rectangles = null;
-		this.pattern = props.pattern && Game.CAT_PATTERN[props.pattern] || Game.CAT_PATTERN.PATTERN_2;
+		this.pattern = props.pattern && Game.PATTERN[props.pattern] || Game.PATTERN.PATTERN_2;
 		this.rectDimension = props.rectDimension || null;
 		this.rectStrokeWidth = props.rectStrokeWidth || null;
 		this.width = props && props.width && props.width || 10;
@@ -42,7 +43,7 @@ class Game {
 		for (let i = 0; i < this.width; i++) {
 			this.rectangles[i] = new Array(this.height);
 		}
-		console.log(this.rectangles);
+		//console.log(this.rectangles);
 	}
 
 	createRectangles(props) {
@@ -121,13 +122,13 @@ class Game {
 	}
 
     rectangleMouseOverHandler = (rect) => {
-		rect.get().set('fill', Rectangle.COLORS.HOVER);
+		rect.get().set('fill', COLORS.HOVER);
 		rect.get().canvas.renderAll();
 		// console.log('RECTANGLE MOUSE OVER');
 	}
 
 	rectangleMouseOutHandler = (rect) => {
-		rect.get().set('fill', Rectangle.COLORS.TEMPORARY);
+		rect.get().set('fill', COLORS.TEMPORARY);
 		rect.get().canvas.renderAll();
 		// console.log('RECTANGLE MOUSE OUT');
 	}
@@ -147,7 +148,7 @@ class Game {
 	}
 }
 
-Game.CAT_PATTERN = {
+Game.PATTERN = {
 	PATTERN_1: {
 		stage_1: { column: 0, row: 2 },
 		stage_2: { column: 1, row: 1 },

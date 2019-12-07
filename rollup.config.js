@@ -1,12 +1,13 @@
 import babel from 'rollup-plugin-babel';
 import { eslint }  from 'rollup-plugin-eslint';
+import { uglify } from "rollup-plugin-uglify";
 
 export default {
     input: './app.js',
         output: {
-        file: './dist/fat_cat.js',
+        file: './dist/bundle.js',
             format: 'esm',
-            sourcemap: true,
+            sourcemap: false,
             treeshake: false
     },
     plugins: [
@@ -15,6 +16,9 @@ export default {
         }),
         babel({
             exclude: 'node_modules/**'
-        })
+        }),
+		uglify({
+			sourcemap: false,
+		}),
     ]
 };
