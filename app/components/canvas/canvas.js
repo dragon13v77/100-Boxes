@@ -1,4 +1,5 @@
 import Image from '../image/image.js';
+import { APP_INJECTION_ID, CANVAS_CLASS_NAME, CANVAS_ELEMENT_TAG } from '../../constants/constants.js';
 
 /**
  * Canvas component
@@ -6,7 +7,7 @@ import Image from '../image/image.js';
 class Canvas {
 	constructor(props) {
 		this.id = props.id;
-		this.className = 'my_canvas';
+		this.className = CANVAS_CLASS_NAME;
 		this.canvas = null;
 		this.init(props);
 		this.create(props);
@@ -14,9 +15,9 @@ class Canvas {
 	}
 
 	init(props) {
-		const canvas = document.createElement('canvas');
+		const canvas = document.createElement(CANVAS_ELEMENT_TAG);
 		canvas.id = props.id;
-		document.getElementById('app').appendChild(canvas);
+		document.getElementById(APP_INJECTION_ID).appendChild(canvas);
 	}
 
 	create(props) {

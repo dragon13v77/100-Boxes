@@ -7,6 +7,8 @@ export const COLORS = {
 	HOVER: 'rgb(195, 186, 0)',
 };
 export const APP_INJECTION_ID = 'app';
+export const CANVAS_CLASS_NAME = 'my_canvas';
+export const CANVAS_ELEMENT_TAG = 'canvas';
 export const PATTERN = {
 	PATTERNS: {
 		PATTERN_1: {
