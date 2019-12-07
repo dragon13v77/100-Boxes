@@ -1,6 +1,6 @@
 import Canvas from '../../components/canvas/canvas.js';
 import Rectangle from '../../components/rectangle/rectangle.js';
-import {COLORS} from "../../constants/constants.js";
+import {COLORS, PATTERN} from "../../constants/constants.js";
 
 class Game {
 	constructor(props) {
@@ -10,7 +10,7 @@ class Game {
 			temporary: [],
 		};
 		this.rectangles = null;
-		this.pattern = props.pattern && Game.PATTERN[props.pattern] || Game.PATTERN.PATTERN_2;
+		this.pattern = props.pattern && PATTERN.PATTERNS[props.pattern].STAGES || PATTERN.PATTERNS.PATTERN_2.STAGES;
 		this.rectDimension = props.rectDimension || null;
 		this.rectStrokeWidth = props.rectStrokeWidth || null;
 		this.width = props && props.width && props.width || 10;
@@ -147,38 +147,5 @@ class Game {
 		document.getElementById('score').innerHTML = ` SCORE: ${score} / ${this.width * this.height}`;
 	}
 }
-
-Game.PATTERN = {
-	PATTERN_1: {
-		stage_1: { column: 0, row: 2 },
-		stage_2: { column: 1, row: 1 },
-		stage_3: { column: 2, row: 0 },
-		stage_4: { column: 1, row: -1 },
-		stage_5: { column: 0, row: -2 },
-		stage_6: { column: -1, row: -1 },
-		stage_7: { column: -2, row: 0 },
-		stage_8: { column: -1, row: 1 },
-	},
-	PATTERN_2: {
-		stage_1: { column: 0, row: 3 },
-		stage_2: { column: 2, row: 2 },
-		stage_3: { column: 3, row: 0 },
-		stage_4: { column: 2, row: -2 },
-		stage_5: { column: 0, row: -3 },
-		stage_6: { column: -2, row: -2 },
-		stage_7: { column: -3, row: 0 },
-		stage_8: { column: -2, row: 2 },
-	},
-	PATTERN_3: {
-		stage_1: { column: 0, row: 4 },
-		stage_2: { column: 3, row: 3 },
-		stage_3: { column: 4, row: 0 },
-		stage_4: { column: 3, row: -3 },
-		stage_5: { column: 0, row: -4 },
-		stage_6: { column: -3, row: -3 },
-		stage_7: { column: -4, row: 0 },
-		stage_8: { column: -3, row: 3 },
-	},
-};
 
 export default Game;

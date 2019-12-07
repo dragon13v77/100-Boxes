@@ -7,3 +7,47 @@ export const COLORS = {
 	HOVER: 'rgb(195, 186, 0)',
 };
 export const APP_INJECTION_ID = 'app';
+export const PATTERN = {
+	PATTERNS: {
+		PATTERN_1: {
+			NAME: 'Small',
+			STAGES: {
+				stage_1: {column: 0, row: 2},
+				stage_2: {column: 1, row: 1},
+				stage_3: {column: 2, row: 0},
+				stage_4: {column: 1, row: -1},
+				stage_5: {column: 0, row: -2},
+				stage_6: {column: -1, row: -1},
+				stage_7: {column: -2, row: 0},
+				stage_8: {column: -1, row: 1},
+			}
+		},
+		PATTERN_2: {
+			DEFAULT: true,
+			NAME: 'Medium',
+			STAGES: {
+				stage_1: {column: 0, row: 3},
+				stage_2: {column: 2, row: 2},
+				stage_3: {column: 3, row: 0},
+				stage_4: {column: 2, row: -2},
+				stage_5: {column: 0, row: -3},
+				stage_6: {column: -2, row: -2},
+				stage_7: {column: -3, row: 0},
+				stage_8: {column: -2, row: 2},
+			}
+		},
+		PATTERN_3: {
+			NAME: 'Large',
+			STAGES: {
+				stage_1: {column: 0, row: 4},
+				stage_2: {column: 3, row: 3},
+				stage_3: {column: 4, row: 0},
+				stage_4: {column: 3, row: -3},
+				stage_5: {column: 0, row: -4},
+				stage_6: {column: -3, row: -3},
+				stage_7: {column: -4, row: 0},
+				stage_8: {column: -3, row: 3},
+			}
+		},
+	},
+}
